@@ -43,3 +43,38 @@ def roce_rating(roce, broad_sector, sector_medians):
         return "Below Sector Benchmark"
     else:
         return "In Line with Benchmark"
+ # ---------------- Day 9: Leverage & Efficiency Ratios ----------------
+
+def debt_to_equity(borrowings, equity_capital, reserves):
+    denom = equity_capital + reserves
+    if denom <= 0 or pd.isna(denom):
+        return None
+    if borrowings == 0:
+        return 0.0
+    return round(borrowings / denom, 2)
+
+def high_leverage_flag(de_ratio, broad_sector):
+    if de_ratio is None:
+        return False
+    return de_ratio > 5 and broad_sector != "Financials"
+
+def interest_coverage_ratio(operating_profit, other_income, interest):
+    if interest == 0 or pd.isna(interest):
+        return None, "Debt Free"
+    if pd.isna(operating_profit) or pd.isna(other_income):
+        return None, None
+    icr = round((operating_profit + other_income) / interest, 2)
+    return icr, None
+
+def icr_warning_flag(icr):
+    if icr is None:
+        return False
+    return icr < 1.5
+
+def net_debt(borrowings, investments):
+    return borrowings - investments
+
+def asset_turnover(sales, total_assets):
+    if total_assets == 0 or pd.isna(total_assets):
+        return None
+    return round(sales / total_assets, 2)   
